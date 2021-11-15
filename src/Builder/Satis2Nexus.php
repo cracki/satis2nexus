@@ -45,12 +45,14 @@ class Satis2Nexus
 	 */
 	public function send2Nexus(String $file, Package $package)
 	{
+ 		set_time_limit(0);
 		$url = $this->config['nexus'].'/repository/'.$this->config['nexus-repository'].'/packages/upload/'.$package->getPrettyName().'/'.$package->getPrettyVersion();
 		$fh_res = fopen($file, 'r');
 
 		$curl = new Curl();
 		$curl->verbose();
 		$curl->setBasicAuthentication($this->config['nexus-user'], $this->config['nexus-password']);
+		$curl->setOpt(CURLOPT_TIMEOUT,0)
 		$curl->setOpt(CURLOPT_PUT,true);
 		$curl->setOpt(CURLOPT_HTTPHEADER, array('Expect:'));
 		$curl->setOpt(CURLOPT_INFILE,$fh_res);
